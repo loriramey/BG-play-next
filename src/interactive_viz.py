@@ -7,7 +7,7 @@ import plotly.express as px
 
 def display_interactive_charts():
     """Display interactive visualizations (e.g., Plotly charts) on the page."""
-    st.header("Interactive Visualizations")
+    st.header("Interactive Data Visualizations")
     st.subheader("Data Definitions")
     st.markdown("""
             The following visualizations use a Bayesian corrected **average game review** by users, as provided by the BoardGameGeek API.

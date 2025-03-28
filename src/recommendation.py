@@ -3,8 +3,8 @@ import pandas as pd
 from helper_funct import print_game_info, find_closest_name, get_root_title
 
 GAMEDATA_FILE = "/Users/loriramey/PycharmProjects/BGPlayNext/data/raw/gamedata.csv"
-COSINE_SIM_MECH_FILE =
-COSINE_SIM_ORIG_FILE =
+COSINE_SIM_MECH_FILE = "/Users/loriramey/PycharmProjects/BGPlayNext/data/matrices/cosine_similarity_mech_heavy.npy"
+COSINE_SIM_ORIG_FILE = "/Users/loriramey/PycharmProjects/BGPlayNext/data/matrices/cosine_similarity_origmix.npy"
 
 # Load master data and cosine similarity matrix
 df = pd.read_csv(GAMEDATA_FILE)

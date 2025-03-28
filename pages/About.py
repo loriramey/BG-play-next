@@ -20,16 +20,21 @@ def show_about_info():
             \n\n  This app represents the output of my capstone project to complete a B.S. in Computer Science from Western Governors University. 
             \n I hope to continue improving the app's recommendation engine and features as I grow my coding skills.
         """)
+    st.markdown("""---""")
 
     st.subheader("About the Data and License")
     st.markdown("""
             The base game data files come from a public dataset on [Kaggle](),
              obtained through the BoardGameGeek.com API under their [license](https://boardgamegeek.com/wiki/page/XML_API_Terms_of_Use), 
              used within the scope of their terms of use.
-    """)
+             \n\n  This app is published under the terms of an [MIT license](https://opensource.org/licenses/mit). I would appreciate being credited
+             if you find this app useful and link to it. Thanks!
+             \n\n  Last updated: Spring 2025
+        """)
     st.image("visualizations/BGGlogo.png.webp")
+    st.markdown("""---""")
 
-    st.subheader("The Creator")
+    st.subheader("About the Creator")
     st.write("I'm a passionate board game enthusiast, developer, researcher, and educator located in the United States.")
     st.image("visualizations/creator_headshot.jpg", caption="App Creator", width = 300)
 

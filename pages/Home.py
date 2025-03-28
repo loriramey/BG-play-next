@@ -6,7 +6,7 @@ from src.recommendation import get_rec_by_name
 
 def display_welcome():
     """Display the title and welcome message."""
-    st.title("Play Next - find your next Board Game!")
+    st.title("Play Next - find your next favorite Board Game!")
     st.write("Welcome! Use the controls below to search for and filter games.")
 
 def get_user_input():
