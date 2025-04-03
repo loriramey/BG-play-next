@@ -8,6 +8,7 @@ import numpy as np
 import logging
 from src.helper_funct import sanitize_input, find_closest_name, filter_games
 from src.recommendation import get_rec_by_name
+from src.external_file_download import download_large_file_with_progress
 import os
 import pandas as pd
 
@@ -18,10 +19,16 @@ project_root = os.path.dirname(current_dir)
 gamedata_path = os.path.join(project_root, "data", "raw", "gamedata.csv")
 matrix_path = os.path.join(project_root, "data", "matrices", "cosine_similarity_mech_heavy.npy")
 
+#remote URL for large CS matrix file
+remote_matrix_url = "https://truenamegames.com/matrices/cosine_similarity_mech_heavy.npy"
+
 #preload the large data files
 if "gamedata" not in st.session_state:
     st.session_state["gamedata"] = pd.read_csv(gamedata_path)
 if "cosine_sim_primary" not in st.session_state:
+    if not os.path.exists(matrix_path):
+        st.info("Matrix file note found locally, downloading it...")
+        download_large_file_with_progress(remote_matrix_url, matrix_path)
     st.session_state["cosine_sim_primary"] = np.load(matrix_path)
 
 def display_welcome():
