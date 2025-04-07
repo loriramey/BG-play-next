@@ -5,8 +5,7 @@
 headless = true
 # Specify a port (optional)
 port = 8501
-# Disable CORS if needed (be cautious with this in production)
-enableCORS = false
+
 
 [browser]
 # Prevent Streamlit from gathering usage stats

@@ -4,6 +4,14 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+@st.cache_data
+def load_dataset(dataset_name: str) -> pd.DataFrame:
+    """Load dataset by name, preferring session cache if available."""
+    if dataset_name == "Top 300 Games":
+        return st.session_state.get("top300")
+    else:
+        return st.session_state.get("gamedata")
+
 
 def display_interactive_charts():
     """Display interactive visualizations (e.g., Plotly charts) on the page."""
@@ -13,20 +21,10 @@ def display_interactive_charts():
     dataset_option = st.selectbox("Choose Dataset:",
                                   options=["Top 300 Games", "Full Dataset"],
                                   key="dataset_option")
-    if dataset_option == "Top 300 Games":
-        data_file = "data/raw/BGGtop300.csv"
-    else:
-        data_file = "data/raw/gamedata.csv"
-
-    # Load the dataset
-    try:
-        df = pd.read_csv(data_file)
-    except Exception as e:
-        st.error(f"Error loading dataset: {e}")
-        return
+    df = load_dataset(dataset_option)
 
     # Ensure key columns are numeric
-    for col in ["bayesaverage", "playingtime", "averageweight", "BGGrank"]:
+    for col in ["average", "playingtime", "averageweight", "BGGrank"]:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
     # Let the user choose which correlation to display
@@ -62,7 +60,7 @@ def display_interactive_charts():
     fig = px.scatter(
         df_filtered,
         x=x_col,
-        y="bayesaverage",
+        y="average",
         labels={x_col: x_label, "bayesaverage": "Bayesian Rating (1-10)"},
         title=f"Correlation: Bayesian Rating vs {x_label}"
     )

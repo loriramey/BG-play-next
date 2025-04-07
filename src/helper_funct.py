@@ -1,45 +1,13 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
 import re
 import logging
 from rapidfuzz import process, fuzz
 
-'''
-# Define file paths
-GAMEDATA_FILE = "/Users/loriramey/PycharmProjects/BGPlayNext/data/raw/gamedata.csv"
-COSINE_SIM_MECH_FILE = "/Users/loriramey/PycharmProjects/BGPlayNext/data/matrices/cosine_similarity_mech_heavy.npy"
-COSINE_SIM_ORIG_FILE = "/Users/loriramey/PycharmProjects/BGPlayNext/data/matrices/cosine_similarity_origmix.npy"
-
-# Load gamedata.csv once and assume its order matches the CS matrix
-df = pd.read_csv(GAMEDATA_FILE)
-
-# Create an ID-to-index mapping assuming the CS matrix rows correspond to the order of the CSV
-game_index = {name: idx for idx, name in enumerate(df['name'])}  # For fuzzy matching
-id_to_index = {game_id: idx for idx, game_id in enumerate(df['id'])}
-
-#HELPER FUNCTION: retrieve the similarity score for any pair of games from .npy
-def get_similarity(game_id1: int, game_id2: int) -> float:
-    """
-    Return the cosine similarity between two games based on their IDs
-    using the precomputed CS matrix.
-    """
-    if game_id1 not in id_to_index or game_id2 not in id_to_index:
-        raise ValueError("One or both game IDs not found in the dataset.")
-    idx1 = id_to_index[game_id1]
-    idx2 = id_to_index[game_id2]
-    return COSINE_SIM_MECH_FILE[idx1, idx2]
-
-#HELPER FUNCTION: retrieve the full row of data for any game by game id
-def get_game_data(game_id: int) -> pd.Series:
-    """
-    Return the game data row from gamedata.csv for the given game ID.
-    """
-    if game_id not in id_to_index:
-        raise ValueError("Game ID not found in the dataset.")
-    # This assumes that 'id' uniquely identifies a game in df.
-    return df.loc[df['id'] == game_id].iloc[0]
-'''
+#HELPER FUNCTION to improve caching and loading of a parquet file
+@st.cache_data
+def load_parquet_file(path):
+    return pd.read_parquet(path)
 
 #HELPER FUNCTION --make sure user input isn't a hack-attack; limit to normal text
 def sanitize_input(user_input):
@@ -69,12 +37,11 @@ def find_closest_name(user_input, auto_select=False):
 
     # Ensure that gamedata and game_index are loaded in session state.
     if "game_index" not in st.session_state:
-        # Load gamedata if needed
         if "gamedata" not in st.session_state:
-            st.session_state["gamedata"] = pd.read_csv("data/raw/gamedata.csv")
-            logging.info("Loaded gamedata.csv into session_state in helper_funct")
-        df = st.session_state["gamedata"]
-        st.session_state["game_index"] = {name: idx for idx, name in enumerate(df['name'])}
+            st.session_state["gamedata"] = load_parquet_file("data/processed/gamedata.parquet")
+            logging.info("Loaded gamedata.parquet into session_state in helper_funct")
+        gamedata_df = st.session_state["gamedata"]
+        st.session_state["game_index"] = {name: idx for idx, name in enumerate(gamedata_df['name'])}
         logging.info("Computed game_index in helper_funct")
 
     game_index = st.session_state["game_index"]
@@ -107,7 +74,8 @@ def filter_games(game_list, filters):
           - min_players (int or None)
           - max_players (int or None)
           - max_playtime (int or None)
-          - min_bayesavg (float or None)
+          - min_avg (float or None)
+          - min_weight(float or None)
           - min_year (int or None)
 
     Returns:
@@ -147,3 +115,17 @@ def filter_games(game_list, filters):
 
     return df
 
+# HELPER FUNCTION: retrieve the full row of data for any game by game id
+def get_game_data(game_id: int) -> pd.Series:
+    """
+    Return the game data row from the gamedata DataFrame in session_state for the given game ID.
+    """
+    if "gamedata" not in st.session_state:
+        st.session_state["gamedata"] = pd.read_parquet("data/processed/gamedata.parquet")
+        logging.info("Loaded gamedata.parquet into session_state in get_game_data")
+
+    gamedata_df = st.session_state["gamedata"]
+    result = gamedata_df[gamedata_df['id'] == game_id]
+    if result.empty:
+        raise ValueError("Game ID not found in gamedata.")
+    return result.iloc[0]

@@ -4,54 +4,80 @@ page_title: Game Recommendations
 
 #This is the home page and also the main recommendation engine page
 import streamlit as st
-import numpy as np
 import logging
-from src.helper_funct import sanitize_input, find_closest_name, filter_games
-from src.recommendation import get_rec_by_name
-from src.external_file_download import download_large_file_with_progress
 import os
 import pandas as pd
+from src.helper_funct import sanitize_input, find_closest_name, filter_games, load_parquet_file
+from src.recommendation import get_rec_by_name
 
 # Determine the base directory (project root)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(current_dir)
 
-gamedata_path = os.path.join(project_root, "data", "raw", "gamedata.csv")
-matrix_path = os.path.join(project_root, "data", "matrices", "cosine_similarity_mech_heavy.npy")
+#data file paths / load key files
+gamedata_path = os.path.join(project_root, "data", "processed", "gamedata.parquet")
+parquet_dir = os.path.join(project_root, "data", "processed")
+top300_path = os.path.join(project_root, "data", "raw", "BGGtop300.csv")
 
-#remote URL for large CS matrix file
-remote_matrix_url = "https://truenamegames.com/matrices/cosine_similarity_mech_heavy.npy"
-
-#preload the large data files
 if "gamedata" not in st.session_state:
-    st.session_state["gamedata"] = pd.read_csv(gamedata_path)
-if "cosine_sim_primary" not in st.session_state:
-    if not os.path.exists(matrix_path):
-        st.info("Matrix file note found locally, downloading it...")
-        download_large_file_with_progress(remote_matrix_url, matrix_path)
-    st.session_state["cosine_sim_primary"] = np.load(matrix_path)
+    st.session_state["gamedata"] = load_parquet_file(gamedata_path)
+if "top300" not in st.session_state:
+    st.session_state["top300"] = pd.read_csv(top300_path)
+if "rec_mech" not in st.session_state:
+    st.session_state["rec_mech"] = load_parquet_file(os.path.join(parquet_dir, "top50_mech_heavy.parquet"))
+if "rec_cat" not in st.session_state:
+    st.session_state["rec_cat"] = load_parquet_file(os.path.join(parquet_dir, "top50_cat_heavy.parquet"))
+if "rec_mixed" not in st.session_state:
+    st.session_state["rec_mixed"] = load_parquet_file(os.path.join(parquet_dir, "top50_mixed.parquet"))
 
 def display_welcome():
     """Display the title and welcome message."""
     st.title("Play Next")
     st.header("Find your next favorite Board Game!")
-    st.write("Enter a title to search for similar games.")
-    st.write("Set filters using the options on the left.")
+    st.write("Enter a game title to search for similar games. Confirm which title is correct.")
+    st.write("Set filters using the options on the left after initial results load.")
+    st.write("Customize your recommendation by picking a focus for similarities.")
 
-    if st.sidebar.button("Restart App"):
+    if st.sidebar.button("Reset for New Search"):
         st.session_state.clear()
         st.rerun()
 
 def get_user_input():
-    """Get and sanitize user input from a text field."""
+    """
+    Display a radio button and text input for the user to enter a game title and choose a recommendation mode.
+
+    Returns:
+        tuple: A tuple containing the sanitized game title input (str) and the selected match mode (str).
+               Match mode will be one of 'mech', 'cat', or 'mixed' corresponding to mechanics, theme, or blended focus.
+    """
+    st.subheader("Choose how you want to match games:")
+    match_mode_display = st.radio(
+        "Recommendation Mode",
+        options=["Match Game Mechanics", "Match Game Theme", "Match a Blend of Characteristics"],
+        index=0,
+        help="Choose whether to prioritize game mechanics, theme, or a mix when finding similar games."
+    )
+    mode_map = {
+        "Match Game Mechanics": "mech",
+        "Match Game Theme": "cat",
+        "Match a Blend of Characteristics": "mixed"
+    }
+    st.write("Click GET RECOMMENDATIONS below if you want to switch between modes")
     raw_input = st.text_input("Enter a board game name:")
     # Call your external sanitize function
-    return sanitize_input(raw_input) if raw_input else None
+    sanitized_input = sanitize_input(raw_input) if raw_input else None
+    match_mode = mode_map[match_mode_display]
+    return sanitized_input, match_mode
 
 
 def show_filter_sidebar():
-    """Display filtering options in the sidebar and return the filter values as a dict."""
+    """
+    Display sidebar widgets allowing the user to filter game recommendations based on game attributes.
 
+    Returns:
+        dict: Dictionary containing user-specified filter values for:
+              min_players, max_players, max_playtime, min_avg, min_weight, and min_year.
+    """
     st.sidebar.header("Filter your Results:")
     min_players = st.sidebar.number_input("Min Players", min_value=1, value=1)
     max_players = st.sidebar.number_input("Max Players", min_value=1, value=8)
@@ -69,7 +95,12 @@ def show_filter_sidebar():
     }
 
 def display_results(recommended_games):
-    """Display the recommendation results as expandable sections."""
+    """
+    Render the top recommended games in expandable UI sections with game details and images.
+
+    Args:
+        recommended_games (pd.DataFrame): DataFrame containing filtered and ranked board game recommendations.
+    """
     logging.info(f"After filtering: {len(recommended_games)} games remaining")  #FOR DEBUG
     for i, row in recommended_games.head(25).iterrows():
         with st.expander(f"{row['name']}"):
@@ -99,9 +130,12 @@ def display_results(recommended_games):
 
 
 def home_page():
-    """Main function to drive the Home page."""
+    """
+    Main controller for the Home page. Manages game title input, game selection,
+    recommendation generation, filtering, and display of results.
+    """
     display_welcome()
-    user_input = get_user_input()   #this incorporates sanitization function
+    user_input, match_mode = get_user_input()   #this incorporates sanitization function
 
     if user_input:
         # fuzzy search & offer 8 options based on title
@@ -114,7 +148,7 @@ def home_page():
         # Button to trigger recommendation engine; store result in session_state
         if st.button("Get Recommendations") or "recommendations" not in st.session_state:
             try:
-                recs = get_rec_by_name(selected_game, auto_select=False)
+                recs = get_rec_by_name(selected_game, match_mode=match_mode, auto_select=False)
                 st.session_state["recommendations"] = recs
                 st.session_state["selected_game"] = selected_game
                 logging.info(f"Recommendations computed for {selected_game}")
@@ -135,3 +169,4 @@ def home_page():
 
 if __name__ == "__main__":
     home_page()
+
