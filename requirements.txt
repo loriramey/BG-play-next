@@ -1,4 +1,4 @@
-streamlit>=1.44.0
+#streamlit>=1.44.0   #commenting out as sometimes this requirement can delay app deployment
 pandas>=1.5.0
 numpy>=1.23.0
 plotly>=5.13.0
