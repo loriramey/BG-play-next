@@ -34,8 +34,8 @@ def display_welcome():
     """Display the title and welcome message."""
     st.title("Play Next")
     st.header("Find your next favorite Board Game!")
-    st.write("Enter a game title to search for similar games. Confirm which title is correct.")
-    st.write("Set filters using the options on the left after initial results load.")
+    st.write("Enter a game title to search for similar games. Confirm which title is correct then click Get Recommendations below.")
+    st.write("Set filters using the options on the left after initial results load. These filters update your results automatically.")
     st.write("Customize your recommendation by picking a focus for similarities.")
 
     if st.sidebar.button("Reset for New Search"):
@@ -53,16 +53,16 @@ def get_user_input():
     st.subheader("Choose how you want to match games:")
     match_mode_display = st.radio(
         "Recommendation Mode",
-        options=["Match Game Mechanics", "Match Game Theme", "Match a Blend of Characteristics"],
+        options=["Match a Blend of Characteristics", "Match Game Mechanics", "Match Game Theme"],
         index=0,
-        help="Choose whether to prioritize game mechanics, theme, or a mix when finding similar games."
+        help="Choose whether to prioritize game mechanics, theme, or a broad mix when finding similar games."
     )
     mode_map = {
+        "Match a Blend of Characteristics": "mixed",
         "Match Game Mechanics": "mech",
-        "Match Game Theme": "cat",
-        "Match a Blend of Characteristics": "mixed"
+        "Match Game Theme": "cat"
     }
-    st.write("Click GET RECOMMENDATIONS below if you want to switch between modes")
+    st.write("Click GET RECOMMENDATIONS below if you switch between modes")
     raw_input = st.text_input("Enter a board game name:")
     # Call your external sanitize function
     sanitized_input = sanitize_input(raw_input) if raw_input else None
@@ -79,11 +79,11 @@ def show_filter_sidebar():
               min_players, max_players, max_playtime, min_avg, min_weight, and min_year.
     """
     st.sidebar.header("Filter your Results:")
-    min_players = st.sidebar.number_input("Min Players", min_value=1, value=1)
-    max_players = st.sidebar.number_input("Max Players", min_value=1, value=8)
-    max_playtime = st.sidebar.number_input("Max Playtime (minutes)", min_value=5, value=200)
+    min_players = st.sidebar.number_input("Min Players", min_value=1, max_value=2,value=1)
+    max_players = st.sidebar.number_input("Max Players", min_value=1, value=12)
+    max_playtime = st.sidebar.number_input("Max Playtime (minutes)", min_value=5, value=220)
     min_avg = st.sidebar.slider("Minimum User Rating", min_value=1.0, max_value=10.0, value=5.0, step=0.1)
-    min_weight = st.sidebar.slider("Average Weight (Complexity", min_value=1.0, max_value=5.0, value=1.0, step=0.1)
+    min_weight = st.sidebar.slider("Average Weight (complexity)", min_value=1.0, max_value=5.0, value=1.0, step=0.1)
     min_year = st.sidebar.number_input("Minimum Publication Year", min_value=1900, value=1970)
     return {
         "min_players": min_players,
