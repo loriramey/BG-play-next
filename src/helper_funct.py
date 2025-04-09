@@ -46,7 +46,7 @@ def find_closest_name(user_input, auto_select=False):
 
     game_index = st.session_state["game_index"]
     choices = list(map(str, game_index.keys()))
-    matches = process.extract(sanitized, choices, scorer=fuzz.WRatio, limit=10)
+    matches = process.extract(sanitized, choices, scorer=fuzz.WRatio, limit=12)
     logging.info("found list of matches: {}".format(matches))
 
     if auto_select:
