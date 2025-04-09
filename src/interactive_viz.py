@@ -6,11 +6,15 @@ import plotly.express as px
 
 @st.cache_data
 def load_dataset(dataset_name: str) -> pd.DataFrame:
-    """Load dataset by name, preferring session cache if available."""
+    """Load dataset by name, with fallback loading if session cache is missing."""
     if dataset_name == "Top 300 Games":
-        return st.session_state.get("top300")
+        if "top300" not in st.session_state:
+            st.session_state["top300"] = pd.read_csv("data/raw/BGGtop300.csv")
+        return st.session_state["top300"]
     else:
-        return st.session_state.get("gamedata")
+        if "gamedata" not in st.session_state:
+            st.session_state["gamedata"] = pd.read_parquet("data/processed/gamedata.parquet")
+        return st.session_state["gamedata"]
 
 
 def display_interactive_charts():
