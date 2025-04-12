@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import logging
+from src.helper_funct import trim_franchise_clones
 
 # FUNCTION: Find "similar" games given a user input game, applying various filters
 @st.cache_data(show_spinner="Computing recommendations...")
@@ -52,8 +53,11 @@ def get_rec_by_name(game_name: str, match_mode: str = "mech", auto_select: bool 
     # Rename column
     merged["similarity"] = merged["similarity_score"]  # rename for legacy compatibility
 
+    # Reduce the number of "clones" to 4
+    recommendations = trim_franchise_clones(merged, max_per_series=4)
+
     # Filter and return selected columns
-    return merged[[
+    return recommendations[[
         'name', 'description_clean', 'thumbnail', 'image', 'yearpublished',
         'category_list', 'mech_list', 'tags', 'BGGrank', 'tags_str',
         'categories_str', 'mechanics_str', 'minplayers', 'maxplayers', 'playingtime',
