@@ -177,7 +177,6 @@ def home_page():
         selected_option = st.selectbox("Select the game you meant:", options)   #have user confirm game to look up
         selected_game = selected_option.split(" (")[0]           #Extract game name from this format
         st.write("You selected", selected_game)
-        st.write("Here's info about the game you searched for, for reference:")
       
         if "selected_game" in st.session_state:   #Show info about the game searched, for reference
             show_searched_game(st.session_state["selected_game"])
