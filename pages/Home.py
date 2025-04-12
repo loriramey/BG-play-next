@@ -177,17 +177,17 @@ def home_page():
         selected_option = st.selectbox("Select the game you meant:", options)   #have user confirm game to look up
         selected_game = selected_option.split(" (")[0]           #Extract game name from this format
         st.write("You selected", selected_game)
-      
-        if "selected_game" in st.session_state:   #Show info about the game searched, for reference
-            show_searched_game(st.session_state["selected_game"])
 
-        # Button to trigger recommendation engine; store result in session_state
         if st.button("Get Recommendations") or "recommendations" not in st.session_state:
             try:
                 recs = get_rec_by_name(selected_game, match_mode=match_mode, auto_select=False)
                 st.session_state["recommendations"] = recs
                 st.session_state["selected_game"] = selected_game
                 logging.info(f"Recommendations computed for {selected_game}")
+                
+                # 👇 Show selected game info immediately after recommendations are computed
+                show_searched_game(selected_game)
+        
             except Exception as e:
                 logging.error(f"Error computing recommendations: {e}")
                 st.error("There was an error computing recommendations. Please try again.")
