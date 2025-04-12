@@ -57,6 +57,35 @@ def find_closest_name(user_input, auto_select=False):
     return candidate_list
 
 
+def trim_franchise_clones(df, max_per_series=3):
+    """
+    Limit the number of games from the same franchise in the recommendations.
+    Keeps a maximum number of entries per base title.
+
+    Args:
+        df (pd.DataFrame): DataFrame with a 'name' column.
+        max_per_series (int): Maximum number of games to retain per series.
+
+    Returns:
+        pd.DataFrame: Trimmed DataFrame with franchise clones limited.
+    """
+    import re
+    from collections import defaultdict
+
+    base_name_map = defaultdict(list)
+
+    for idx, name in df['name'].items():
+        # Extract base name: remove colon + subtitle or trailing editions
+        base = re.split(r":|–|-", name)[0].strip().lower()
+        base_name_map[base].append(idx)
+
+    keep_indices = []
+    for indices in base_name_map.values():
+        keep_indices.extend(indices[:max_per_series])  # keep first N games
+
+    return df.loc[keep_indices].copy()
+
+
 
 # FUNCTION: Extract root game title for searching and filtering (to avoid duplicates)
 def get_root_title(title):
