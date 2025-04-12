@@ -18,7 +18,7 @@ def sanitize_input(user_input):
     sanitized = allowed.sub('', user_input)
     return sanitized.strip()
 
-
+'''
 # FUNCTION: Use fuzzy matching on game name to handle user input
 def find_closest_name(user_input, auto_select=False):
     """
@@ -55,6 +55,60 @@ def find_closest_name(user_input, auto_select=False):
     # Convert the tuple output into a list of dictionaries for clarity in the UI.
     candidate_list = [{"name": match, "score": score} for match, score, _ in matches]
     return candidate_list
+'''
+
+def find_closest_name(user_input, auto_select=False):
+    """
+    Use fuzzy matching on the provided game name to return candidate matches.
+    Prioritizes games that start with the input string, followed by fuzzy matches.
+    
+    Parameters:
+      - user_input (str): The raw input from the user.
+      - auto_select (bool): If True, return only the best match; otherwise, return a list of candidates.
+
+    Returns:
+      - If auto_select is True: the best matching game name (str).
+      - Otherwise: a list of dictionaries like {"name": ..., "score": ...}
+    """
+    sanitized = sanitize_input(user_input)
+
+    # Ensure game_index exists
+    if "game_index" not in st.session_state:
+        if "gamedata" not in st.session_state:
+            st.session_state["gamedata"] = load_parquet_file("data/processed/gamedata.parquet")
+            logging.info("Loaded gamedata.parquet into session_state in helper_funct")
+        gamedata_df = st.session_state["gamedata"]
+        st.session_state["game_index"] = {name: idx for idx, name in enumerate(gamedata_df['name'])}
+        logging.info("Computed game_index in helper_funct")
+
+    game_index = st.session_state["game_index"]
+    choices = list(game_index.keys())
+
+    # Prefix matches first (limit to 4)
+    prefix_matches = [name for name in choices if name.lower().startswith(sanitized.lower())][:4]
+
+    # Fuzzy matches (excluding prefix matches)
+    remaining_choices = [name for name in choices if name not in prefix_matches]
+    fuzzy_matches = process.extract(sanitized, remaining_choices, scorer=fuzz.WRatio, limit=12)
+    fuzzy_candidates = [match for match, score, _ in fuzzy_matches]
+
+    # Merge and deduplicate
+    combined = prefix_matches + fuzzy_candidates
+    seen = set()
+    unique_combined = []
+    for name in combined:
+        if name not in seen:
+            seen.add(name)
+            unique_combined.append(name)
+
+    # Final scoring for display
+    matches = process.extract(sanitized, unique_combined, scorer=fuzz.WRatio, limit=12)
+    logging.info("Final prioritized matches: {}".format(matches))
+
+    if auto_select:
+        return matches[0][0]
+
+    return [{"name": match, "score": score} for match, score, _ in matches]
 
 
 def trim_franchise_clones(df, max_per_series=3):
