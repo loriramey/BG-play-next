@@ -94,27 +94,35 @@ def show_filter_sidebar():
         "min_year": min_year
     }
 
-    # Show the original game as the first expandable block
-    selected_df = st.session_state["gamedata"]
-    selected_game_row = selected_df[selected_df["name"] == st.session_state["selected_game"]].iloc[0]
-    with st.expander(f"{selected_game_row['name']} (Selected Game)"):
-        if pd.notna(selected_game_row["thumbnail"]):
-            st.image(selected_game_row["thumbnail"], width=100)
-    
-        year = int(selected_game_row['yearpublished']) if pd.notna(selected_game_row['yearpublished']) else "N/A"
-        min_players = selected_game_row['minplayers'] if pd.notna(selected_game_row['minplayers']) else "N/A"
-        max_players = selected_game_row['maxplayers'] if pd.notna(selected_game_row['maxplayers']) else "N/A"
-        playtime = selected_game_row['playingtime'] if pd.notna(selected_game_row['playingtime']) else "N/A"
-        rating = round(selected_game_row['average'], 2) if pd.notna(selected_game_row['average']) else "N/A"
-        weight = roudn(selected_game_row['averageweight'], 2) if pd.notna(selected_game_row['averageweight']) else "N/A"
-        description = selected_game_row['description_clean'] if pd.notna(selected_game_row['description_clean']) else "N/A"
-    
-        st.write(f"**Year Published:** {year}")
-        st.write(f"**Min / Max Players:** {min_players} - {max_players}")
-        st.write(f"**Expected Playtime:** {playtime} minutes")
-        st.write(f"**Average User Rating (out of 10):** {rating}")
-        st.write(f"**Complexity Weight (out of 5):** {weight}")
-        st.write(f"**Description:** {description}")
+def show_searched_game(selected_game_name: str):
+    """
+    Display info about the game selected by the user before showing recommendations.
+    """
+    original_game_data = st.session_state.get("gamedata")
+    if original_game_data is None or selected_game_name is None:
+        return
+
+    selected_row = original_game_data[original_game_data['name'] == selected_game_name]
+    if not selected_row.empty:
+        row = selected_row.iloc[0]
+        with st.expander(f"🔍 Game Info: {row['name']}"):
+            if pd.notna(row["thumbnail"]):
+                st.image(row["thumbnail"], width=100)
+
+            year = int(row['yearpublished']) if pd.notna(row['yearpublished']) else "N/A"
+            min_players = row['minplayers'] if pd.notna(row['minplayers']) else "N/A"
+            max_players = row['maxplayers'] if pd.notna(row['maxplayers']) else "N/A"
+            playtime = row['playingtime'] if pd.notna(row['playingtime']) else "N/A"
+            rating = f"{row['average']:.2f}" if pd.notna(row['average']) else "N/A"
+            weight = f"{row['averageweight']:.2f}" if pd.notna(row['averageweight']) else "N/A"
+            description = row['description_clean'] if pd.notna(row['description_clean']) else "N/A"
+
+            st.write(f"**Year Published:** {year}")
+            st.write(f"**Min / Max Players:** {min_players} - {max_players}")
+            st.write(f"**Expected Playtime:** {playtime} minutes")
+            st.write(f"**Average User Rating (out of 10):** {rating}")
+            st.write(f"**Complexity Weight (out of 5):** {weight}")
+            st.write(f"**Description:** {description}")
 
 
 
@@ -125,6 +133,7 @@ def display_results(recommended_games):
     Args:
         recommended_games (pd.DataFrame): DataFrame containing filtered and ranked board game recommendations.
     """
+    
     logging.info(f"After filtering: {len(recommended_games)} games remaining")  #FOR DEBUG
     for i, row in recommended_games.head(25).iterrows():
         with st.expander(f"{row['name']}"):
@@ -168,6 +177,10 @@ def home_page():
         selected_option = st.selectbox("Select the game you meant:", options)   #have user confirm game to look up
         selected_game = selected_option.split(" (")[0]           #Extract game name from this format
         st.write("You selected", selected_game)
+        st.write("Here's info about the game you searched for, for reference:")
+      
+        if "selected_game" in st.session_state:   #Show info about the game searched, for reference
+            show_searched_game(st.session_state["selected_game"])
 
         # Button to trigger recommendation engine; store result in session_state
         if st.button("Get Recommendations") or "recommendations" not in st.session_state:
