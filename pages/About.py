@@ -29,6 +29,16 @@ def show_about_info():
         """)
     st.markdown("""---""")
 
+    st.subheader("How to Use the App")
+    st.markdown("""
+            -Enter a game title in the text entry box on the main app page.
+            \n\n-Choose the correct game title from the resulting dropdown. 
+            \n\n-If game recommendations do not immediately appear, click the "Get Recommendations" button.
+            \n\n-Use the filters on the left to cusomize your results.
+            \n\n-Use the "Reset for New Search" button in the upper left to start a new search session.
+        """)
+    st.markdown("""---""")
+
     st.subheader("About the Data and License")
     st.markdown("""
             The base game data files come from a public dataset on [Kaggle](https://www.kaggle.com/datasets/jvanelteren/boardgamegeek-reviews?select=games_detailed_info2025.csv),
