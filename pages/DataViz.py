@@ -23,8 +23,8 @@ def display_static_visuals():
     st.header("Data Visualizations: Static Visuals")
 
     st.subheader("Games Published Each Year Since 1980")
-    st.write("Note the scale for the left axis is thousands")
-    st.image("visualizations/games_per_year.png", caption="Games Per Year, in Thousands")
+    st.write("Note the scale for the left axis is hundreds")
+    st.image("visualizations/games_per_year.png", caption="Games Per Year, in Hundreds")
     st.markdown("""---""")
 
     st.subheader("Distribution of Ratings in the Data Set")
