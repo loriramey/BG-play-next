@@ -3,3 +3,4 @@ data/raw/gamedata.csv filter=lfs diff=lfs merge=lfs -text
 *.npy filter=lfs diff=lfs merge=lfs -text
 *.parquet filter=lfs diff=lfs merge=lfs -text
 *.csv filter=lfs diff=lfs merge=lfs -text
+/Users/loriramey/PycharmProjects/BG-play-next/src/data filter=lfs diff=lfs merge=lfs -text
