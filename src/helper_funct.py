@@ -18,6 +18,30 @@ def sanitize_input(user_input):
     sanitized = allowed.sub('', user_input)
     return sanitized.strip()
 
+
+def get_all_variants(selected_name: str, df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Return every game in the same series or with the same Game: tag as selected_name.
+    Falls back to substring matching on the base title.
+    """
+    # 1) Try series_name match
+    series = df.loc[df["name"] == selected_name, "series_name"].iat[0]
+    if series:
+        return df[df["series_name"] == series]
+
+    # 2) Try game_tag match
+    tag = df.loc[df["name"] == selected_name, "game_tag"].iat[0]
+    if tag:
+        return df[df["game_tag"] == tag]
+
+    # 3) Fallback to base-name substring
+    base = selected_name.split(":")[0].strip()
+    mask = df["name"].str.contains(re.escape(base), case=False)
+    return df[mask]
+
+
+
+
 '''
 # FUNCTION: Use fuzzy matching on game name to handle user input
 def find_closest_name(user_input, auto_select=False):

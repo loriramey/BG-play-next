@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:ceb410f5d7f1be6acef2a078356778722339d94ac458b9d310a06d39397f0c35
-size 1353
+tag,cat1,cat2,cat3,cat4,cat5,cat6,cat7,cat8,cat9,cat19,cat11,cat12,cat13,cat14
+Dice & Card,Card Game,Number,Dice,Math,,,,,,,,,,
+War Gaming,Wargame,War Game,World War II,Modern Warfare,American Civil War,Napoleonic,World War I,Civil War,Pike and Shot,American Revolutionary War,Vietnam War,American Indian Wars,Korean War,Post-Napoleonic
+Strategy,Abstract Strategy,Territory Building,Civilization,Space Exploration,Maze,Miniatures,,,,,,,,
+Historic Setting,Medieval,Ancient,American West,Renaissance,Age of Reason,Prehistoric,Mafia,Nautical,Arabian,,,,,
+Sci-Fi / Fantasy / Horror,Fantasy,Science Fiction,Horror,Mytholigy ,Comic Book / Strip,Zombies,,,,,,,,
+Themed,Animals,Movies / TV / Radio theme,Video Game Theme,Novel-based,Religious,Medical,Book,Pirates,Adventure,Music,Fighting,Racing,Sports,Aviation / Flight
+Social,Party Game,Humor,Bluffing,Trivia,Mature / Adult,,,,,,,,,
+Kids,Children's Game,Educational,,,,,,,,,,,,
+Economy &  Systems,Economic,Negotiation,City Building,Political,Transportation,Trains,Industry / Manufacturing,Environmental,Farming,,,,,
+Puzzle & Deduction,Deduction,Puzzle,Word Game,Murder Mystery,Spies / Secret Agents,,,,,,,,,
+Player Actions,Action / Dexterity,Real-time,Exploration,Memory,Travel,,,,,,,,,
+Other,Electronic,Print & Play,Collectible Components,Game System,Expansion for Base-game,Fan Expansion,,,,,,,,
