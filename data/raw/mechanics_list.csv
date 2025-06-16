@@ -1,3 +1,194 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:9192e7600f756159c8baa7f815af8aa678a918f0ff169cf81c602f168d3374ed
-size 4211
+mechanics,frequency
+Dice Rolling,7652
+Hand Management,5713
+Set Collection,3836
+Variable Player Powers,3443
+Hexagon Grid,2929
+Simulation,2575
+Open Drafting,2487
+Cooperative Game,2434
+Tile Placement,2325
+Grid Movement,2201
+Modular Board,2041
+Area Majority / Influence,1987
+Solo / Solitaire Game,1951
+Take That,1641
+Roll / Spin and Move,1572
+Action Points,1501
+Simultaneous Action Selection,1465
+Area Movement,1447
+Team-Based Game,1345
+Push Your Luck,1321
+Auction / Bidding,1271
+Memory,1170
+Pattern Building,1161
+Point to Point Movement,1127
+Worker Placement,1051
+"Deck, Bag, and Pool Building",1013
+Player Elimination,948
+Scenario / Mission / Campaign Game,907
+Variable Set-up,854
+Paper-and-Pencil,822
+Movement Points,783
+Storytelling,759
+Trading,741
+Pick-up and Deliver,726
+Network and Route Building,723
+Campaign / Battle Card Driven,706
+Role Playing,698
+Pattern Recognition,689
+Secret Unit Deployment,653
+Betting and Bluffing,612
+Events,605
+Trick-taking,589
+Square Grid,588
+Voting,581
+End Game Bonuses,558
+Deduction,527
+Race,516
+Action Queue,486
+Line of Sight,456
+Zone of Control,422
+Ratio / Combat Results Table,413
+Stock Holding,358
+Variable Phase Order,348
+Real-Time,343
+Contracts,342
+Chit-Pull System,326
+Acting,302
+Commodity Speculation,287
+Card Play Conflict Resolution,281
+Income,267
+Communication Limits,253
+Enclosure,241
+Market,231
+Track Movement,226
+Hidden Roles,223
+Line Drawing,221
+Rock-Paper-Scissors,211
+Action / Event,192
+Deck Construction,189
+Closed Drafting,189
+Multi-Use Cards,185
+Connections,176
+Measurement Movement,175
+Grid Coverage,167
+Victory Points as a Resource,167
+Re-rolling and Locking,162
+Semi-Cooperative Game,161
+Spelling,157
+Negotiation,152
+Tech Trees / Tech Tracks,149
+Turn Order: Progressive,144
+Narrative Choice / Paragraph,142
+Stacking and Balancing,140
+"Worker Placement, Different Worker Types",139
+Die Icon Resolution,133
+Matching,133
+Hidden Movement,132
+Once-Per-Game Abilities,132
+Layering,128
+Traitor Game,126
+Action Drafting,123
+Multiple Maps,122
+Map Addition,121
+Area-Impulse,119
+Move Through Deck,117
+Worker Placement with Dice Workers,114
+Chaining,112
+Turn Order: Stat-Based,111
+Turn Order: Claim Action,109
+Hidden Victory Points,108
+Sudden Death Ending,107
+Action Retrieval,105
+Rondel,103
+Critical Hits and Failures,99
+Ladder Climbing,97
+Flicking,93
+Roles with Asymmetric Information,93
+Interrupts,92
+Score-and-Reset Game,90
+Ownership,90
+Programmed Movement,90
+Three Dimensional Movement,86
+Bingo,82
+Alliances,81
+Resource to Move,77
+Investment,77
+Player Judge,75
+Command Cards,74
+Tags,73
+Turn Order: Time Track,71
+Slide / Push,70
+Increase Value of Unchosen Resources,69
+"I Cut, You Choose",68
+Speed Matching,67
+Finale Ending,67
+Follow,66
+Map Reduction,66
+Stat Check Resolution,65
+Delayed Purchase,64
+Bias,64
+Catch the Leader,63
+Tug of War,62
+Legacy Game,62
+Highest-Lowest Scoring,61
+Singing,59
+Melding and Splaying,58
+Elapsed Real Time Ending,56
+Auction: Sealed Bid,54
+Turn Order: Auction,53
+Map Deformation,53
+Targeted Clues,53
+Lose a Turn,52
+Minimap Resolution,52
+Action Timer,50
+Mancala,49
+Movement Template,49
+Drawing,47
+Physical Removal,46
+Static Capture,46
+Pieces as Map,45
+Random Production,44
+Loans,44
+King of the Hill,43
+Single Loser Game,42
+Predictive Bid,42
+Auction: Turn Order Until Pass,41
+Turn Order: Pass Order,41
+Advantage Token,41
+Hot Potato,41
+Bribery,39
+Constrained Bidding,39
+Moving Multiple Units,36
+Pattern Movement,35
+Automatic Resource Growth,34
+Different Dice Movement,34
+Kill Steal,31
+Prisoner's Dilemma,28
+Auction: Dutch,28
+Turn Order: Role Order,28
+Relative Movement,27
+Ordering,27
+Turn Order: Random,27
+Force Commitment,26
+Crayon Rail System,25
+Order Counters,23
+Selection Order Bid,23
+Impulse Movement,22
+Questions and Answers,19
+Auction: Once Around,19
+Cube Tower,18
+Induction,18
+Auction: Multiple Lot,17
+Auction: Fixed Placement,16
+Neighbor Scope,13
+Closed Economy Auction,13
+Resource Queue,12
+Bids As Wagers,11
+Passed Action Token,9
+Auction Compensation,8
+Auction: Dutch Priority,6
+Auction: Dexterity,6
+Auction: English,3
+City Building,1
