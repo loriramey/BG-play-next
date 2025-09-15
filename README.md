@@ -34,11 +34,12 @@
 If you aren't already using Git Large File Service (LFS), install and run:
 
     `git lfs install
-    git lfs track "data/raw/gamedata.csv"
-    git lfs track "data/matrices/*"`
+    git lfs track "data/raw/*.*"
+    git lfs track "data/processed/*.*"`
 
 
 ## Usage
+**VERSION 2.0***
 
 ### Local Testing
 **Run the app locally with Streamlit:**
@@ -83,7 +84,6 @@ Modify as needed.
 This project is open source. Please see the MIT License information in the sidebar.  
 
 ## Acknowledgements
-
 * Data sourced from BoardGameGeek via their public API, obtained through Kaggle as a public data set.
 * Kaggle [source](https://www.kaggle.com/datasets/jvanelteren/boardgamegeek-reviews?select=games_detailed_info2025.csv)
-* Built using Streamlit.
+* Built using Streamlit and Python via PyCharm IDE
